@@ -1,5 +1,7 @@
 package com.tsailin.springbootmall.service.Impl;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,11 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public Integer createProduct(ProductRequest productRequest) {
 		return productDao.createProduct(productRequest);
+	}
+
+	@Override
+	public void updateProduct(Integer productId, @Valid ProductRequest productRequest) {
+		productDao.updateProduct(productId, productRequest);
 	}
 
 }
