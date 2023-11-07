@@ -1,5 +1,7 @@
 package com.tsailin.springbootmall.service.Impl;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,11 @@ import com.tsailin.springbootmall.service.ProductService;
 public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private ProductDao productDao;
+	
+	@Override
+	public List<Product> getProducts() {
+		return productDao.getProducts();
+	}
 	
 	@Override
 	public Product getProductById(Integer productId) {

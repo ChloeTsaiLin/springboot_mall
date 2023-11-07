@@ -1,5 +1,7 @@
 package com.tsailin.springbootmall.dao;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.tsailin.springbootmall.dto.ProductRequest;
@@ -14,4 +16,6 @@ public interface ProductDao {
 	void updateProduct(Integer productId, @Valid ProductRequest productRequest);
 
 	void deleteProductById(Integer productId);
+
+	List<Product> getProducts();
 }

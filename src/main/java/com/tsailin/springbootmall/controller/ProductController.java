@@ -1,5 +1,7 @@
 package com.tsailin.springbootmall.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,13 @@ import com.tsailin.springbootmall.service.ProductService;
 public class ProductController {
 	@Autowired
 	private ProductService productService;
+	
+	@GetMapping("/products")
+	public ResponseEntity<List<Product>> getProducts(){
+		List<Product> list = productService.getProducts();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(list);
+	}
 	
 	@GetMapping("/products/{productId}")
 	public ResponseEntity<Product> getProduct(@PathVariable Integer productId){

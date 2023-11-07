@@ -1,5 +1,7 @@
 package com.tsailin.springbootmall.service;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
@@ -16,4 +18,6 @@ public interface ProductService {
 	void updateProduct(Integer productId, @Valid ProductRequest productRequest);
 
 	void deleteProductById(Integer productId);
+
+	List<Product> getProducts();
 }
