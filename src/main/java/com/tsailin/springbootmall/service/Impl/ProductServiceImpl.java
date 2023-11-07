@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.tsailin.springbootmall.constant.ProductCategory;
 import com.tsailin.springbootmall.dao.ProductDao;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
@@ -18,8 +19,8 @@ public class ProductServiceImpl implements ProductService{
 	private ProductDao productDao;
 	
 	@Override
-	public List<Product> getProducts() {
-		return productDao.getProducts();
+	public List<Product> getProducts(ProductCategory category, String search) {
+		return productDao.getProducts(category, search);
 	}
 	
 	@Override

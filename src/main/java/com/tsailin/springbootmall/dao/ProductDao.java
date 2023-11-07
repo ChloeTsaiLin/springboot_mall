@@ -4,10 +4,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.tsailin.springbootmall.constant.ProductCategory;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 
 public interface ProductDao {
+
+	List<Product> getProducts(ProductCategory category, String search);
 
 	Product getProductById(Integer productId);
 
@@ -17,5 +20,4 @@ public interface ProductDao {
 
 	void deleteProductById(Integer productId);
 
-	List<Product> getProducts();
 }

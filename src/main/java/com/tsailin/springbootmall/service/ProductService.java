@@ -6,11 +6,15 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
+import com.tsailin.springbootmall.constant.ProductCategory;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 
 @Service
 public interface ProductService {
+
+	List<Product> getProducts(ProductCategory category, String search);
+	
 	Product getProductById(Integer productId);
 
 	Integer createProduct(ProductRequest productRequest);
@@ -19,5 +23,4 @@ public interface ProductService {
 
 	void deleteProductById(Integer productId);
 
-	List<Product> getProducts();
 }
