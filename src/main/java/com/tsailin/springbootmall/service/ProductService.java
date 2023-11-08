@@ -6,14 +6,14 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
-import com.tsailin.springbootmall.constant.ProductCategory;
+import com.tsailin.springbootmall.dto.ProductQueryParams;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 
 @Service
 public interface ProductService {
 
-	List<Product> getProducts(ProductCategory category, String search);
+	List<Product> getProducts(ProductQueryParams productQueryParams);
 	
 	Product getProductById(Integer productId);
 

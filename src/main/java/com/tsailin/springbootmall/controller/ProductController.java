@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tsailin.springbootmall.constant.ProductCategory;
+import com.tsailin.springbootmall.dto.ProductQueryParams;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 import com.tsailin.springbootmall.service.ProductService;
@@ -29,7 +30,11 @@ public class ProductController {
 	@GetMapping("/products")
 	public ResponseEntity<List<Product>> getProducts(@RequestParam(required = false) ProductCategory category,
 													@RequestParam(required = false) String search){
-		List<Product> list = productService.getProducts(category, search);
+		ProductQueryParams productQueryParams = new ProductQueryParams();
+		productQueryParams.setCategory(category);
+		productQueryParams.setSearch(search);
+		
+		List<Product> list = productService.getProducts(productQueryParams);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(list);
 	}

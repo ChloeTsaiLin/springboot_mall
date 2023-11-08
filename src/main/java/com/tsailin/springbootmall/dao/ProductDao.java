@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.tsailin.springbootmall.constant.ProductCategory;
+import com.tsailin.springbootmall.dto.ProductQueryParams;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 
 public interface ProductDao {
 
-	List<Product> getProducts(ProductCategory category, String search);
+	List<Product> getProducts(ProductQueryParams productQueryParams);
 
 	Product getProductById(Integer productId);
 
