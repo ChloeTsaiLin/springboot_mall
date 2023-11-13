@@ -3,10 +3,13 @@ package com.tsailin.springbootmall.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +26,7 @@ import com.tsailin.springbootmall.model.Product;
 import com.tsailin.springbootmall.service.ProductService;
 
 @RestController
+@Validated
 public class ProductController {
 	@Autowired
 	private ProductService productService;
@@ -31,12 +35,16 @@ public class ProductController {
 	public ResponseEntity<List<Product>> getProducts(@RequestParam(required = false) ProductCategory category,
 													@RequestParam(required = false) String search,
 													@RequestParam(defaultValue = "last_modified_date") String orderBy,
-													@RequestParam(defaultValue = "desc") String sort){
+													@RequestParam(defaultValue = "desc") String sort,
+													@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+													@RequestParam(defaultValue = "0") @Min(0) Integer offset){
 		ProductQueryParams productQueryParams = new ProductQueryParams();
 		productQueryParams.setCategory(category);
 		productQueryParams.setSearch(search);
 		productQueryParams.setOrderBy(orderBy);
 		productQueryParams.setSort(sort);
+		productQueryParams.setLimit(limit);
+		productQueryParams.setOffset(offset);
 		
 		List<Product> list = productService.getProducts(productQueryParams);
 		
