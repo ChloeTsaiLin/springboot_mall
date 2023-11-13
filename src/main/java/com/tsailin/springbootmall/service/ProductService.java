@@ -12,6 +12,8 @@ import com.tsailin.springbootmall.model.Product;
 
 @Service
 public interface ProductService {
+	
+	Integer countProduct(ProductQueryParams productQueryParams);
 
 	List<Product> getProducts(ProductQueryParams productQueryParams);
 	

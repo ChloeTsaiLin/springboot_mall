@@ -24,6 +24,7 @@ import com.tsailin.springbootmall.dto.ProductQueryParams;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 import com.tsailin.springbootmall.service.ProductService;
+import com.tsailin.springbootmall.util.Page;
 
 @RestController
 @Validated
@@ -32,10 +33,15 @@ public class ProductController {
 	private ProductService productService;
 	
 	@GetMapping("/products")
-	public ResponseEntity<List<Product>> getProducts(@RequestParam(required = false) ProductCategory category,
+	public ResponseEntity<Page<Product>> getProducts(//Search condition
+													@RequestParam(required = false) ProductCategory category,
 													@RequestParam(required = false) String search,
+													
+													//Sort condition
 													@RequestParam(defaultValue = "last_modified_date") String orderBy,
 													@RequestParam(defaultValue = "desc") String sort,
+													
+													//Pagination
 													@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
 													@RequestParam(defaultValue = "0") @Min(0) Integer offset){
 		ProductQueryParams productQueryParams = new ProductQueryParams();
@@ -46,9 +52,14 @@ public class ProductController {
 		productQueryParams.setLimit(limit);
 		productQueryParams.setOffset(offset);
 		
-		List<Product> list = productService.getProducts(productQueryParams);
+		//Pagination
+		Page<Product> page = new Page<>();
+		page.setLimit(limit);
+		page.setOffset(offset);
+		page.setTotal(productService.countProduct(productQueryParams));
+		page.setResult(productService.getProducts(productQueryParams));
 		
-		return ResponseEntity.status(HttpStatus.OK).body(list);
+		return ResponseEntity.status(HttpStatus.OK).body(page);
 	}
 	
 	@GetMapping("/products/{productId}")

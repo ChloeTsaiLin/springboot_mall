@@ -25,13 +25,9 @@ public class ProductDaoImpl implements ProductDao{
 	@Autowired
 	private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
 	
-	
-	@Override
-	public List<Product> getProducts(ProductQueryParams productQueryParams) {
-		String sql = "SELECT * FROM product WHERE 1=1";
-		
-		Map<String, Object> map = new HashMap<>();
-		
+	private String addFilterSql(String sql,
+								Map<String, Object> map,
+								ProductQueryParams productQueryParams) {
 		if(productQueryParams.getCategory() != null) {
 			sql += " AND category = :category";
 			map.put("category", productQueryParams.getCategory().name());
@@ -40,6 +36,29 @@ public class ProductDaoImpl implements ProductDao{
 			sql += " AND product_name LIKE :search";
 			map.put("search", "%" + productQueryParams.getSearch() + "%");
 		}
+		
+		return sql;
+	}
+	
+	@Override
+	public Integer countProduct(ProductQueryParams productQueryParams) {
+		String sql = "SELECT count(*) FROM product WHERE 1=1";
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		sql = addFilterSql(sql, map, productQueryParams);
+		Integer total = nameParameterJdbcTemplate
+				.queryForObject(sql, map, Integer.class);
+		return total;
+	}
+
+	@Override
+	public List<Product> getProducts(ProductQueryParams productQueryParams) {
+		String sql = "SELECT * FROM product WHERE 1=1";
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		sql = addFilterSql(sql, map, productQueryParams);
 		
 		sql += " ORDER BY " + productQueryParams.getOrderBy()
 			+ " " +productQueryParams.getSort(); 

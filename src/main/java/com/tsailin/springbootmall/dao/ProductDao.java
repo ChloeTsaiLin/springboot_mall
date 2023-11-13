@@ -9,6 +9,8 @@ import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 
 public interface ProductDao {
+	
+	Integer countProduct(ProductQueryParams productQueryParams);
 
 	List<Product> getProducts(ProductQueryParams productQueryParams);
 
