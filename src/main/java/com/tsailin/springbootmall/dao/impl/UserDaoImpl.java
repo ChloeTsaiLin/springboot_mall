@@ -41,6 +41,22 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
+	public User getUserByEmail(String email) {
+		String sql = "SELECT * FROM user_table WHERE email = :email";
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("email", email);
+		
+		List<User> userList = nameParameterJdbcTemplate.query(sql, map, new UserRowMapper());
+		
+		if(userList.size() > 0) {
+			return userList.get(0);
+		}else {			
+			return null;
+		}
+	}
+
+	@Override
 	public Integer register(@Valid UserRegisterRequest userRegisterRequest) {
 		String sql = "INSERT INTO user_table (email, user_password, created_date, last_modified_date)"
 				+ "VALUES (:email, :userPassword, :createdDate, :lastModifiedDate)";
