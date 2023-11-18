@@ -36,4 +36,11 @@ VALUES ('Instant Coffee Crystals', 'COFFEE', 'https://a.rimg.com.tw/s3/gmarket/b
 	300, 80, '2023-11-07 14:07:08', '2023-11-07 14:15:08'),
 	
 	
-	
+CREATE TABLE user_table
+(
+ user_id		INT		NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ email			VARCHAR(256)	NOT NULL UNIQUE KEY,
+ user_password		VARCHAR(256)	NOT NULL,
+ created_date		TIMESTAMP	NOT NULL,
+ last_modified_date 	TIMESTAMP	NOT NULL,
+)
