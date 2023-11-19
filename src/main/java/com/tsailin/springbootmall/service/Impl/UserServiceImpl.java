@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.tsailin.springbootmall.dao.UserDao;
@@ -37,6 +38,10 @@ public class UserServiceImpl implements UserService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
+		//Hash
+		String md5HexPassword= DigestUtils.md5DigestAsHex(userRegisterRequest.getPassword().getBytes());
+		userRegisterRequest.setPassword(md5HexPassword);
+		
 		return userDao.register(userRegisterRequest);
 		
 	}
@@ -50,7 +55,9 @@ public class UserServiceImpl implements UserService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
-		if(user.getUserPassword().equals(userLoginRequest.getPassword())){
+		//Compare password
+		String md5HexPassword= DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes());
+		if(user.getUserPassword().equals(md5HexPassword)){
 			return user;
 		}else {
 			log.warn("This email({}) address or password is incorrect", userLoginRequest.getEmail());
