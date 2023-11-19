@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.tsailin.springbootmall.dao.UserDao;
+import com.tsailin.springbootmall.dto.UserLoginRequest;
 import com.tsailin.springbootmall.dto.UserRegisterRequest;
 import com.tsailin.springbootmall.model.User;
 import com.tsailin.springbootmall.service.UserService;
@@ -32,12 +33,29 @@ public class UserServiceImpl implements UserService {
 		User user = userDao.getUserByEmail(userRegisterRequest.getEmail());
 		
 		if(user != null) {
-			log.warn("this email({}) is already registered", userRegisterRequest.getEmail());
+			log.warn("This email({}) is already registered", userRegisterRequest.getEmail());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		}
 		
 		return userDao.register(userRegisterRequest);
 		
+	}
+
+	@Override
+	public User login(@Valid UserLoginRequest userLoginRequest) {
+		User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+		
+		if(user == null) {
+			log.warn("This email({}) is not registered", userLoginRequest.getEmail());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
+		if(user.getUserPassword().equals(userLoginRequest.getPassword())){
+			return user;
+		}else {
+			log.warn("This email({}) address or password is incorrect", userLoginRequest.getEmail());
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	
