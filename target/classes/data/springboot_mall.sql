@@ -42,5 +42,28 @@ CREATE TABLE user_table
  email			VARCHAR(256)	NOT NULL UNIQUE KEY,
  user_password		VARCHAR(256)	NOT NULL,
  created_date		TIMESTAMP	NOT NULL,
- last_modified_date 	TIMESTAMP	NOT NULL,
+ last_modified_date 	TIMESTAMP	NOT NULL
 )
+
+CREATE TABLE order_table
+(
+ order_id		INT		NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ user_id		INT		NOT NULL,
+ total_amount		INT		NOT NULL,
+ created_date		TIMESTAMP	NOT NULL,
+ last_modified_date 	TIMESTAMP	NOT NULL
+)
+
+
+
+CREATE TABLE order_item
+(
+ order_item_id	INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+ order_id	INT NOT NULL,
+ product_id	INT NOT NULL,
+ quantity	INT NOT NULL,
+ amount		INT NOT NULL
+)
+
+INSERT INTO order_item (order_id, product_id, quantity, amount)
+VALUES (order_id, product_id, quantity, amount)
