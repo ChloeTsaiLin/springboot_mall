@@ -26,7 +26,6 @@ public class OrderDaoImpl implements OrderDao{
 
 	@Override
 	public Integer createOrder(Integer userId, int totalAmount) {
-		System.out.println("OrderDaoImpl: createOrder");
 		String sql = "INSERT INTO order_table (user_id, total_amount, created_date, last_modified_date) "
 				+ "VALUES (:userId, :totalAmount, :createdDate, :lastModifiedDate)";
 		

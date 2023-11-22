@@ -5,37 +5,69 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tsailin.springbootmall.dao.OrderDao;
 import com.tsailin.springbootmall.dao.ProductDao;
+import com.tsailin.springbootmall.dao.UserDao;
 import com.tsailin.springbootmall.dto.BuyItem;
 import com.tsailin.springbootmall.dto.CreateOrderRequest;
 import com.tsailin.springbootmall.model.Order;
 import com.tsailin.springbootmall.model.OrderItem;
 import com.tsailin.springbootmall.model.Product;
+import com.tsailin.springbootmall.model.User;
 import com.tsailin.springbootmall.service.OrderService;
 
 @Component
 public class OrderServiceImpl implements OrderService{
 	
+	private final static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+	
 	@Autowired
 	private OrderDao orderDao;
 	@Autowired
 	private ProductDao productDao;
+	@Autowired
+	private UserDao userDao;
 	
 	@Transactional
 	@Override
 	public Integer createOrder(Integer userId, @Valid CreateOrderRequest createOrderRequest) {
-		System.out.println("OrderServiceImpl: createOrder");
+		//check user exist
+		User user = userDao.getUserById(userId);
+		
+		if(user == null) {
+			log.warn("This userId({}) does not exist.", userId);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
 		int totalAmount = 0;
 		List<OrderItem> orderItemList = new ArrayList<OrderItem>();
 		
 		for (BuyItem buyItem : createOrderRequest.getBuyItemList()) {
 			Product product = productDao.getProductById(buyItem.getProductId());
 			
+			//check product (exist? stock?)
+			if(product == null) {
+				log.warn("This product({}) does not exist.", buyItem.getProductId());
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+				
+			} else if(product.getStock() < buyItem.getQuantity()) {
+				log.warn("This product({}) is out of stock (stock: {}), can't meet the demand (order: {}).",
+						buyItem.getProductId(), product.getStock(), buyItem.getQuantity() );
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+			}
+			
+			//update stock
+			productDao.updateStock(product.getProductId(), product.getStock() - buyItem.getQuantity());
+			
+			//calculate totalAmount
 			int amount = buyItem.getQuantity() * product.getPrice();
 			totalAmount += amount;
 			

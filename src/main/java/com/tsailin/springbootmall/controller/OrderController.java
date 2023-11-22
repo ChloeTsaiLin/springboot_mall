@@ -23,7 +23,6 @@ public class OrderController {
 	@PostMapping("/users/{userId}/orders")
 	private ResponseEntity<Order> createOrder(@PathVariable Integer userId,
 											  @RequestBody @Valid CreateOrderRequest createOrderRequest){
-		System.out.println("OrderController: createOrder");
 		Integer orderId = orderService.createOrder(userId, createOrderRequest);
 		Order order = orderService.getOrderById(orderId);
 		
