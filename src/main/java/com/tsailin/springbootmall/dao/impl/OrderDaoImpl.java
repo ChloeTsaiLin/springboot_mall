@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.tsailin.springbootmall.dao.OrderDao;
+import com.tsailin.springbootmall.dto.OrderQueryParams;
 import com.tsailin.springbootmall.model.Order;
 import com.tsailin.springbootmall.model.OrderItem;
 import com.tsailin.springbootmall.rowmapper.OrderItemRowMapper;
@@ -24,6 +25,19 @@ public class OrderDaoImpl implements OrderDao{
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+	private String addFilterSql(String sql,
+								Map<String, Object> map,
+								OrderQueryParams orderQueryParams) {
+	if(orderQueryParams.getUserId() != null) {
+		sql += " AND user_id = :userId";
+		map.put("userId", orderQueryParams.getUserId());
+	} else {
+		System.out.println("orderQueryParams.getUserId() == null");
+	}
+	
+		return sql;
+	}
+	
 	@Override
 	public Integer createOrder(Integer userId, int totalAmount) {
 		String sql = "INSERT INTO order_table (user_id, total_amount, created_date, last_modified_date) "
@@ -93,6 +107,39 @@ public class OrderDaoImpl implements OrderDao{
 		List<OrderItem> orderItemList = namedParameterJdbcTemplate.query(sql, map, new OrderItemRowMapper());
 		
 		return orderItemList;
+	}
+
+	@Override
+	public Integer countOrder(OrderQueryParams orderQueryParams) {
+		String sql = "SELECT COUNT(*) FROM order_table WHERE 1=1";
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		sql = addFilterSql(sql, map, orderQueryParams);
+		
+		Integer total = namedParameterJdbcTemplate
+						.queryForObject(sql, map, Integer.class);
+		return total;
+	}
+
+	@Override
+	public List<Order> getOrders(OrderQueryParams orderQueryParams) {
+		String sql = "SELECT * FROM order_table WHERE 1=1";
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		sql = addFilterSql(sql, map, orderQueryParams);
+		
+		sql += " ORDER BY " + orderQueryParams.getOrderBy() + " DESC";
+		
+		sql += " LIMIT :limit OFFSET :offset"; 
+		map.put("limit", orderQueryParams.getLimit());
+		map.put("offset", orderQueryParams.getOffset());
+		
+		List<Order> orderList = namedParameterJdbcTemplate
+								.query(sql, map, new OrderRowMapper());
+		
+		return orderList;
 	}
 	
 	
