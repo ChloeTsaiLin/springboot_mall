@@ -21,8 +21,9 @@ import com.tsailin.springbootmall.rowmapper.UserRowMapper;
 
 @Component
 public class UserDaoImpl implements UserDao {
+	
 	@Autowired
-	private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	@Override
 	public User getUserById(Integer userId) {
@@ -31,7 +32,7 @@ public class UserDaoImpl implements UserDao {
 		Map<String, Object> map = new HashMap<>();
 		map.put("userId", userId);
 		
-		List<User> userList = nameParameterJdbcTemplate.query(sql, map, new UserRowMapper());
+		List<User> userList = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
 		
 		if(userList.size() > 0) {
 			return userList.get(0);
@@ -47,7 +48,7 @@ public class UserDaoImpl implements UserDao {
 		Map<String, Object> map = new HashMap<>();
 		map.put("email", email);
 		
-		List<User> userList = nameParameterJdbcTemplate.query(sql, map, new UserRowMapper());
+		List<User> userList = namedParameterJdbcTemplate.query(sql, map, new UserRowMapper());
 		
 		if(userList.size() > 0) {
 			return userList.get(0);
@@ -60,6 +61,7 @@ public class UserDaoImpl implements UserDao {
 	public Integer register(@Valid UserRegisterRequest userRegisterRequest) {
 		String sql = "INSERT INTO user_table (email, user_password, created_date, last_modified_date)"
 				+ "VALUES (:email, :userPassword, :createdDate, :lastModifiedDate)";
+		
 		Map<String, Object> map = new HashMap<>();
 		map.put("email", userRegisterRequest.getEmail());
 		map.put("userPassword", userRegisterRequest.getPassword());
@@ -69,7 +71,7 @@ public class UserDaoImpl implements UserDao {
 		map.put("lastModifiedDate", now);
 		
 		KeyHolder keyHolder = new GeneratedKeyHolder();		
-		nameParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
+		namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
 		int userId = keyHolder.getKey().intValue();
 		
 		return userId;

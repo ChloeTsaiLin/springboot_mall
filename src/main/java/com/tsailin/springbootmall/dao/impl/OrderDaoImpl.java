@@ -28,12 +28,12 @@ public class OrderDaoImpl implements OrderDao{
 	private String addFilterSql(String sql,
 								Map<String, Object> map,
 								OrderQueryParams orderQueryParams) {
-	if(orderQueryParams.getUserId() != null) {
-		sql += " AND user_id = :userId";
-		map.put("userId", orderQueryParams.getUserId());
-	} else {
-		System.out.println("orderQueryParams.getUserId() == null");
-	}
+		if(orderQueryParams.getUserId() != null) {
+			sql += " AND user_id = :userId";
+			map.put("userId", orderQueryParams.getUserId());
+		} else {
+			System.out.println("orderQueryParams.getUserId() == null");
+		}
 	
 		return sql;
 	}

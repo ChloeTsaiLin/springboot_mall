@@ -15,6 +15,7 @@ import com.tsailin.springbootmall.service.ProductService;
 
 @Component
 public class ProductServiceImpl implements ProductService{
+	
 	@Autowired
 	private ProductDao productDao;
 	

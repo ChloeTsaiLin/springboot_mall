@@ -1,7 +1,5 @@
 package com.tsailin.springbootmall.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -29,6 +27,7 @@ import com.tsailin.springbootmall.util.Page;
 @RestController
 @Validated
 public class ProductController {
+	
 	@Autowired
 	private ProductService productService;
 	
@@ -39,7 +38,7 @@ public class ProductController {
 													
 													//Sort condition
 													@RequestParam(defaultValue = "last_modified_date") String orderBy,
-													@RequestParam(defaultValue = "desc") String sort,
+													@RequestParam(defaultValue = "DESC") String sort,
 													
 													//Pagination
 													@RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,

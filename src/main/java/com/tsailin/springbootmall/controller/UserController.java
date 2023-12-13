@@ -16,6 +16,7 @@ import com.tsailin.springbootmall.service.UserService;
 
 @RestController
 public class UserController {
+	
 	@Autowired
 	private UserService userService;
 	

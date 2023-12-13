@@ -10,7 +10,6 @@ import com.tsailin.springbootmall.dto.ProductQueryParams;
 import com.tsailin.springbootmall.dto.ProductRequest;
 import com.tsailin.springbootmall.model.Product;
 
-@Service
 public interface ProductService {
 	
 	Integer countProduct(ProductQueryParams productQueryParams);

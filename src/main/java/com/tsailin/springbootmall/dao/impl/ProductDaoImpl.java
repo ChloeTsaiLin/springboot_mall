@@ -22,8 +22,9 @@ import com.tsailin.springbootmall.rowmapper.ProductRowMapper;
 
 @Component
 public class ProductDaoImpl implements ProductDao{
+	
 	@Autowired
-	private NamedParameterJdbcTemplate nameParameterJdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	private String addFilterSql(String sql,
 								Map<String, Object> map,
@@ -32,6 +33,7 @@ public class ProductDaoImpl implements ProductDao{
 			sql += " AND category = :category";
 			map.put("category", productQueryParams.getCategory().name());
 		}
+		
 		if(productQueryParams.getSearch() != null) {
 			sql += " AND product_name LIKE :search";
 			map.put("search", "%" + productQueryParams.getSearch() + "%");
@@ -42,12 +44,12 @@ public class ProductDaoImpl implements ProductDao{
 	
 	@Override
 	public Integer countProduct(ProductQueryParams productQueryParams) {
-		String sql = "SELECT count(*) FROM product WHERE 1=1";
+		String sql = "SELECT COUNT(*) FROM product WHERE 1=1";
 		
 		Map<String, Object> map = new HashMap<>();
 		
 		sql = addFilterSql(sql, map, productQueryParams);
-		Integer total = nameParameterJdbcTemplate
+		Integer total = namedParameterJdbcTemplate
 				.queryForObject(sql, map, Integer.class);
 		return total;
 	}
@@ -67,7 +69,7 @@ public class ProductDaoImpl implements ProductDao{
 		map.put("limit", productQueryParams.getLimit());
 		map.put("offset", productQueryParams.getOffset());
 		
-		List<Product> productList = nameParameterJdbcTemplate
+		List<Product> productList = namedParameterJdbcTemplate
 									.query(sql, map, new ProductRowMapper());
 		return productList;
 	}
@@ -79,7 +81,7 @@ public class ProductDaoImpl implements ProductDao{
 		Map<String, Object> map = new HashMap<>();
 		map.put("productId", productId);
 		
-		List<Product> productList = nameParameterJdbcTemplate
+		List<Product> productList = namedParameterJdbcTemplate
 									.query(sql, map, new ProductRowMapper());
 		if(productList.size() > 0) {
 			return productList.get(0);
@@ -108,7 +110,7 @@ public class ProductDaoImpl implements ProductDao{
 		map.put("lastModifiedDate", now);
 		
 		KeyHolder keyholder = new GeneratedKeyHolder();
-		nameParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyholder);
+		namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyholder);
 		int productId = keyholder.getKey().intValue();
 		
 		return productId;
@@ -133,7 +135,7 @@ public class ProductDaoImpl implements ProductDao{
 
 		map.put("lastModifiedDate", new Date());
 		
-		nameParameterJdbcTemplate.update(sql, map);
+		namedParameterJdbcTemplate.update(sql, map);
 	}
 
 	@Override
@@ -146,7 +148,7 @@ public class ProductDaoImpl implements ProductDao{
 		map.put("stock", stock);
 		map.put("lastModifiedDate", new Date());
 		
-		nameParameterJdbcTemplate.update(sql, map);
+		namedParameterJdbcTemplate.update(sql, map);
 	}
 
 	@Override
@@ -155,7 +157,7 @@ public class ProductDaoImpl implements ProductDao{
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("productId", productId);
-		nameParameterJdbcTemplate.update(sql, map);
+		namedParameterJdbcTemplate.update(sql, map);
 	}
 	
 	
