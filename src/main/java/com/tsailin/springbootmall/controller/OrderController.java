@@ -55,7 +55,7 @@ public class OrderController {
 		page.setLimit(limit);
 		page.setOffset(offset);
 		page.setTotal(orderService.countOrder(orderQueryParams));
-		page.setResult(orderService.getOrders(orderQueryParams));
+		page.setResults(orderService.getOrders(orderQueryParams));
 		
 		return ResponseEntity.status(HttpStatus.OK).body(page);
 	}

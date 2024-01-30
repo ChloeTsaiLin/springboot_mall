@@ -191,9 +191,22 @@ public class ProductControllerTest {
 	}
 	
     //Get Product-list
-//  @Test
-//  void testGetProducts_success() throws Exception{
-//		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/products");
-//  }
+  @Test
+  void testGetProducts_success() throws Exception{
+		RequestBuilder requestBuilder = MockMvcRequestBuilders
+				.get("/products")
+				.param("orderBy", "product_id")
+				.param("offset", "1");
+		
+		mockMvc.perform(requestBuilder)
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.limit").value(5))
+			.andExpect(jsonPath("$.offset").value(1))
+			.andExpect(jsonPath("$.total").isNotEmpty())
+			.andExpect(jsonPath("$.results.length()").value(5))
+			.andExpect(jsonPath("$.results[0].productId").value(6))
+			.andExpect(jsonPath("$.results[1].productId").value(5));
+  }
 
 }

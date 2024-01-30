@@ -56,7 +56,7 @@ public class ProductController {
 		page.setLimit(limit);
 		page.setOffset(offset);
 		page.setTotal(productService.countProduct(productQueryParams));
-		page.setResult(productService.getProducts(productQueryParams));
+		page.setResults(productService.getProducts(productQueryParams));
 		
 		return ResponseEntity.status(HttpStatus.OK).body(page);
 	}
