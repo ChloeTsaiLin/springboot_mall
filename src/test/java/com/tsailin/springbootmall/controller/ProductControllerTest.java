@@ -192,21 +192,72 @@ public class ProductControllerTest {
 	
     //Get Product-list
   @Test
-  void testGetProducts_success() throws Exception{
+  void testGetProducts_default() throws Exception{
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
-				.get("/products")
-				.param("orderBy", "product_id")
-				.param("offset", "1");
+				.get("/products");
 		
 		mockMvc.perform(requestBuilder)
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.limit").value(5))
-			.andExpect(jsonPath("$.offset").value(1))
+			.andExpect(jsonPath("$.offset").value(0))
 			.andExpect(jsonPath("$.total").isNotEmpty())
 			.andExpect(jsonPath("$.results.length()").value(5))
-			.andExpect(jsonPath("$.results[0].productId").value(6))
-			.andExpect(jsonPath("$.results[1].productId").value(5));
+			.andExpect(jsonPath("$.results[0].productId").isNotEmpty())
+			.andExpect(jsonPath("$.results[4].productId").isNotEmpty());
+  }
+
+  @Test
+  void testGetProducts_search() throws Exception{
+	  RequestBuilder requestBuilder = MockMvcRequestBuilders
+			  .get("/products")
+			  .param("category", "FRESH_PRODUCE")
+			  .param("search", "Avocados");
+	  
+	  mockMvc.perform(requestBuilder)
+	  .andDo(print())
+	  .andExpect(status().isOk())
+	  .andExpect(jsonPath("$.limit").value(5))
+	  .andExpect(jsonPath("$.offset").value(0))
+	  .andExpect(jsonPath("$.total").isNotEmpty())
+	  .andExpect(jsonPath("$.results.length()").value(2))
+	  .andExpect(jsonPath("$.results[0].category").value("FRESH_PRODUCE"))
+	  .andExpect(jsonPath("$.results[1].category").value("FRESH_PRODUCE"));
+  }
+  
+  @Test
+  void testGetProducts_sort() throws Exception{
+	  RequestBuilder requestBuilder = MockMvcRequestBuilders
+			  .get("/products")
+			  .param("orderBy", "product_id");
+	  
+	  mockMvc.perform(requestBuilder)
+	  .andDo(print())
+	  .andExpect(status().isOk())
+	  .andExpect(jsonPath("$.limit").value(5))
+	  .andExpect(jsonPath("$.offset").value(0))
+	  .andExpect(jsonPath("$.total").isNotEmpty())
+	  .andExpect(jsonPath("$.results.length()").value(5))
+	  .andExpect(jsonPath("$.results[0].productId").value(7))
+	  .andExpect(jsonPath("$.results[1].productId").value(6));
+  }
+  
+  @Test
+  void testGetProducts_pagination() throws Exception{
+	  RequestBuilder requestBuilder = MockMvcRequestBuilders
+			  .get("/products")
+			  .param("limit", "2")
+			  .param("offset", "1");
+	  
+	  mockMvc.perform(requestBuilder)
+	  .andDo(print())
+	  .andExpect(status().isOk())
+	  .andExpect(jsonPath("$.limit").value(2))
+	  .andExpect(jsonPath("$.offset").value(1))
+	  .andExpect(jsonPath("$.total").isNotEmpty())
+	  .andExpect(jsonPath("$.results.length()").value(2))
+	  .andExpect(jsonPath("$.results[0].productId").isNotEmpty())
+	  .andExpect(jsonPath("$.results[1].productId").isNotEmpty());
   }
 
 }
